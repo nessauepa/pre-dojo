@@ -1,4 +1,41 @@
-Coloque aqui suas instruções ou comentários que ache útil/relevantes para possamos ler 
-quando estivermos avaliando a sua solução
+**1. Execução**
 
-TESTE VANESSA
+- Certificar-se que o Maven está instalado
+- Certificar-se que o Maven está utilizando o Java 7 com 'mvn -version'
+- Certificar-se que a porta 8081 (Jetty) está livres
+- Baixar os projetos do repositório GIT: https://github.com/nessauepa/pre-dojo.git
+- Compilar e executar o projeto com ‘mvn clean install jetty:run’
+- Abrir o projeto em <a href="http://localhost:8081">http://localhost:8081</a>
+
+**2. Tecnologias**
+
+- Java 7
+- Maven 3 (Gerenciamento de dependências e ciclo de vida da aplicação)
+- Git e GitHub (Controle de versões e repositório Git)
+- Jetty 8 (Container Web com Servlet 3.0 e JSP 2.2)
+- Spring MVC 3 (MVC)
+- RestEasy 2 (APIs Restful)
+- JUnit
+
+**3. Arquitetura**
+
+**Ambiente em memória**
+
+Para simplificar a configuração do ambiente, já que trata-se de um protótipo, foram configurados plugins do Maven para rodar o Jetty em memória. <br />
+Caso o projeto continuasse seu desenvolvimento, seria interessante configurar o ambiente adequadamente, para maior escalabilidade.<br />
+
+**Padronização**
+
+Neste projeto, optou-se por utilizar sempre que possível as especificações Java.<br />
+Por isso, foram utilizadas as especificações JAX-RS (implementação RestEasy), Injeção de Dependência (implementação Spring).<br />
+
+**Estrutura Projeto Java**
+
+O projeto segue o Design Pattern MVC e é dividido nos pacotes ’controller’ (Controller), ‘entity’ e ‘repository’ (Model).<br />
+A camada de controller é implementada com Spring MVC e expõe seus serviços através de uma API RESTful implementada com o RestEasy e usando o formato JSON para facilitar o parser das informações e montagem da tela.<br />
+A camada de model contém as entidades e os repositórios.<br />
+A camada de view é implementada com JSP e JSTL.<br />
+
+**Interface**
+
+// TODO
