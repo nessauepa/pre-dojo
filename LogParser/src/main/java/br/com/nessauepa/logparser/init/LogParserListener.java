@@ -20,11 +20,13 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import br.com.nessauepa.logparser.entity.KillAction;
 import br.com.nessauepa.logparser.entity.Player;
+import br.com.nessauepa.logparser.repository.ActionRepository;
 import br.com.nessauepa.logparser.repository.PlayerRepository;
 
 public class LogParserListener implements ServletContextListener {
 
 	private PlayerRepository repository;
+	private ActionRepository actionRepository;
 	
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
@@ -32,6 +34,7 @@ public class LogParserListener implements ServletContextListener {
 		ServletContext ctx = sce.getServletContext(); 
 		WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(ctx);
 		repository = (PlayerRepository) springContext.getBean(PlayerRepository.class);
+		actionRepository = (ActionRepository) springContext.getBean(ActionRepository.class);
 		
 		try {
 			parseLog(sce.getServletContext());
@@ -104,6 +107,7 @@ public class LogParserListener implements ServletContextListener {
 	    sourcePlayer.addAction(killAction);
 	    
 	    repository.save(sourcePlayer);
+	    actionRepository.save(killAction);
 	}
 
 	@Override

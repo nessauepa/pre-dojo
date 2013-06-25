@@ -12,6 +12,7 @@
           http://www.springframework.org/schema/cache/spring-cache.xsd">
 
 	<context:component-scan base-package="br.com.nessauepa.logparser.repository" />
+	<context:component-scan base-package="br.com.nessauepa.logparser.entity" />
 
 	<mongo:mongo>
 		<mongo:options connections-per-host="3" />
