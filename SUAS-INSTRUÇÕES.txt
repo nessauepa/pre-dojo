@@ -2,10 +2,12 @@
 
 - Certificar-se que o Maven está instalado
 - Certificar-se que o Maven está utilizando o Java 7 com 'mvn -version'
-- Certificar-se que a porta 8081 (Jetty) está livres
-- Baixar os projetos do repositório GIT: https://github.com/nessauepa/pre-dojo.git
+- Certificar-se que as portas 8080 (Jetty) e e 27017 (MongoDB) estão livres
+- Baixar o projeto do repositório GIT: https://github.com/nessauepa/pre-dojo.git
 - Compilar e executar o projeto com ‘mvn clean install jetty:run’
-- Abrir o projeto em <a href="http://localhost:8081">http://localhost:8081</a>
+- Abrir o projeto em <a href="http://localhost:8081">http://localhost:8080</a>
+
+OBS: Talvez seja necessário desabilitar ou configurar o firewall para que o Mongo DB embarcado tenha permissões de acesso necessárias.
 
 **2. Tecnologias**
 
@@ -15,26 +17,31 @@
 - Jetty 8 (Container Web com Servlet 3.0 e JSP 2.2)
 - Spring MVC 3 (MVC)
 - RestEasy 2 (APIs Restful)
-- JUnit
+- MongoDB e Spring Data 1.2 (Banco de Dados NoSQL)
+
 
 **3. Arquitetura**
 
 **Ambiente em memória**
 
-Para simplificar a configuração do ambiente, já que trata-se de um protótipo, foram configurados plugins do Maven para rodar o Jetty em memória. <br />
+Para simplificar a configuração do ambiente, já que trata-se de um protótipo, foram configurados plugins do Maven para rodar o Jetty e o MongoDB automaticamente. <br />
 Caso o projeto continuasse seu desenvolvimento, seria interessante configurar o ambiente adequadamente, para maior escalabilidade.<br />
+
+**Parser**
+Ao fazer o parser do arquivo de log de texto para objetos do Java, optou-se por salvar os dados no MongoDB, a fim de facilitar o processamento e evitar sobrecarregar o HEAP (onde os objetos do Java são armazenados).<br />
+Ao utilizar o MongoDB, que é um banco NOSQL baseado em documentos e Schemaless (sem esquema), é possível adicionar facilmente mais tipos de entradas do log de forma que não seja necessário alterar schemas de banco, acarretando num maior dinamismo dos dados da aplicação.
+Para a operação de parser foram utilizadas as classes Scanner e Expressões Regulares.
 
 **Padronização**
 
 Neste projeto, optou-se por utilizar sempre que possível as especificações Java.<br />
-Por isso, foram utilizadas as especificações JAX-RS (implementação RestEasy), Injeção de Dependência (implementação Spring).<br />
+Por isso, foram utilizadas as especificações JAX-RS (implementação RestEasy), Injeção de Dependência (implementação Spring), como pode ser notado pelo uso das anotações @Named e @Inject ao invés das anotações proprietárias do Spring.<br />
 
 **Estrutura Projeto Java**
 
 O projeto segue o Design Pattern MVC e é dividido nos pacotes ’controller’ (Controller), ‘entity’ e ‘repository’ (Model).<br />
 A camada de controller é implementada com Spring MVC e expõe seus serviços através de uma API RESTful implementada com o RestEasy e usando o formato JSON para facilitar o parser das informações e montagem da tela.<br />
 A camada de model contém as entidades e os repositórios.<br />
-A camada de view é implementada com JSP e JSTL.<br />
 
 **Interface**
 
