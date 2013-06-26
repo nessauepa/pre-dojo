@@ -1,6 +1,6 @@
 package br.com.nessauepa.logparser.entity;
 
-public class KillAction extends Action {
+public class MurderHistoryEntry extends HistoryEntry {
 
 	private Player target;
 

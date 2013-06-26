@@ -20,11 +20,8 @@ public class PlayerRepository extends MongoBaseRepository<Player> {
 
 	public Player findOrCreate(Player player) {
 		Player attached = findById(player.getName());
-		if (attached != null) {
-			player = attached;
-		} else {
-			save(player);
-		}
+		if (attached != null) return attached;
+		save(player);
 		return player;
 	}
 }

@@ -1,31 +1,22 @@
 package br.com.nessauepa.logparser.entity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import br.com.nessauepa.logparser.repository.ActionRepository;
-
-@Named
 @Document(collection = "players")
 @XmlRootElement
 public class Player {
 	@Id
 	private String name;
 	
-	//@DBRef
-	private List<Action> actions;
-
-	@Inject
-	private ActionRepository actionRepository;
+	private List<HistoryEntry> historyList = new ArrayList<HistoryEntry>();
 	
 	public String getName() {
 		return name;
@@ -35,36 +26,30 @@ public class Player {
 		this.name = name;
 	}
 
-	public List<Action> getActions() {
-		return actions;
+	public List<HistoryEntry> getHistoryList() {
+		return historyList;
 	}
 
-	public void setActions(List<Action> actions) {
-		this.actions = actions;
+	public void setHistoryList(List<HistoryEntry> historyList) {
+		this.historyList = historyList;
 	}
 
-	public void addAction(Action action) {
-		if (actions == null) actions = new ArrayList<Action>();	
-		actions.add(action);
+	public void addHistory(HistoryEntry historyEntry) {
+		System.out.println("HISTORICO DE " + name + " = " + historyList.size());
+		historyList.add(historyEntry);
 	}
 	
-	@XmlAttribute
-	public Integer getKillNumber() {
-		int killNumber = 0;
-		if (actions != null) {
-			for (Action action : actions) {
-				if (action instanceof KillAction) {
-					killNumber++;
-				}
+	public Map<Class<? extends HistoryEntry>, Integer> getHistoryCounter() {
+		Map<Class<? extends HistoryEntry>, Integer> map = new HashMap<Class<? extends HistoryEntry>, Integer>();
+		
+		if (historyList != null) {
+			for (HistoryEntry historyEntry : historyList) {
+				Integer current = map.get(historyEntry.getClass());
+				current = (current == null) ? 0 : current;
+				map.put(historyEntry.getClass(), ++current);
 			}
 		}
 		
-		return killNumber;
+		return map;
 	}
-
-	/*@XmlAttribute
-	public int getKilledNumber() {
-		List<Action> killedActions = actionRepository.getKillActionsByTarget(this);
-		return (killedActions == null) ? 0 : killedActions.size();
-	}*/
 }

@@ -18,23 +18,18 @@ import javax.servlet.ServletContextListener;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import br.com.nessauepa.logparser.entity.KillAction;
-import br.com.nessauepa.logparser.entity.Player;
-import br.com.nessauepa.logparser.repository.ActionRepository;
-import br.com.nessauepa.logparser.repository.PlayerRepository;
+import br.com.nessauepa.logparser.service.PlayerService;
 
 public class LogParserListener implements ServletContextListener {
 
-	private PlayerRepository repository;
-	private ActionRepository actionRepository;
+	private PlayerService service;
 	
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
-		// Injeta repository
+		// Injeta repository no contexto do spring
 		ServletContext ctx = sce.getServletContext(); 
 		WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(ctx);
-		repository = (PlayerRepository) springContext.getBean(PlayerRepository.class);
-		actionRepository = (ActionRepository) springContext.getBean(ActionRepository.class);
+		service = (PlayerService) springContext.getBean(PlayerService.class);
 		
 		try {
 			parseLog(sce.getServletContext());
@@ -44,6 +39,7 @@ public class LogParserListener implements ServletContextListener {
 	}
 
 	private void parseLog(ServletContext ctx) throws FileNotFoundException, ParseException {
+		// TODO: definir log
 		System.out.println("Initializing log parser...");
 		File file = new File(ctx.getRealPath("/WEB-INF/classes/logs/game.log"));
 
@@ -87,27 +83,13 @@ public class LogParserListener implements ServletContextListener {
 		Pattern p = Pattern.compile(logEntryPattern);
 	    Matcher matcher = p.matcher(action);
 	    if (!matcher.matches()) {
-	    	System.out.println("   Skiping: is not a kill action.");
+	    	System.out.println("Skiping: is not a kill action.");
 	    	return;
 	    }
 
-	    // Obtem jogador
-	    Player sourcePlayer = new Player();
-	    sourcePlayer.setName(matcher.group(1));
-	    Player targetPlayer = new Player();
-	    targetPlayer.setName(matcher.group(3));
-	    repository.findOrCreate(sourcePlayer);
-	    repository.findOrCreate(targetPlayer);
-	    
-	    // Salva acao
-	    KillAction killAction = new KillAction();
-	    killAction.setDate(current);
-	    killAction.setTarget(targetPlayer);
-
-	    sourcePlayer.addAction(killAction);
-	    
-	    repository.save(sourcePlayer);
-	    actionRepository.save(killAction);
+	    String sourcePlayer = matcher.group(1);
+	    String targetPlayer = matcher.group(3);
+	    service.saveKillAction(sourcePlayer, targetPlayer, current);
 	}
 
 	@Override
