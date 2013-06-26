@@ -100,4 +100,20 @@ public class PlayerHistory {
 		}
 		return favoriteWeapon;
 	}
+
+	public int getMaxStreak() {
+		int maxStreak = 0;
+		if (historyEntries != null) {
+			int parcialMaxStreak = 0;
+			for (HistoryEntry entry : historyEntries) {
+				if (entry instanceof MurderHistoryEntry) {
+					parcialMaxStreak++;
+				} else if (entry instanceof DeathHistoryEntry) {
+					parcialMaxStreak = 0;
+				}
+				if (parcialMaxStreak > maxStreak) maxStreak = parcialMaxStreak;
+			}
+		}
+		return maxStreak;
+	}
 }

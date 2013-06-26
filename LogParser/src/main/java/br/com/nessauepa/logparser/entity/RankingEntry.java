@@ -15,6 +15,7 @@ public class RankingEntry {
 	private int murderCount;
 	private int deathCount;
 	private String favoriteWeapon;
+	private int maxStreak;
 	
 	@XmlAttribute
 	public boolean isNotDiedAward() {
@@ -51,6 +52,14 @@ public class RankingEntry {
 
 	public void setFavoriteWeapon(String favoriteWeapon) {
 		this.favoriteWeapon = favoriteWeapon;
+	}
+	
+	public int getMaxStreak() {
+		return maxStreak;
+	}
+
+	public void setMaxStreak(int maxStreak) {
+		this.maxStreak = maxStreak;
 	}
 
 	public static class OrderByMurderDesc implements Comparator<RankingEntry> {

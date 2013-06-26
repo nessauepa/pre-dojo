@@ -51,6 +51,7 @@ public class RankingService {
 			entry.setDeathCount(playerHistory.countHistoryEntries(DeathHistoryEntry.class));
 			entry.setMurderCount(playerHistory.countHistoryEntries(MurderHistoryEntry.class));
 			entry.setFavoriteWeapon(playerHistory.getFavoriteWeapon());
+			entry.setMaxStreak(playerHistory.getMaxStreak());
 			list.add(entry);
 		}
 		
