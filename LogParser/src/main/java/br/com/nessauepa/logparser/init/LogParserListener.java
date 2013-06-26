@@ -81,7 +81,7 @@ public class LogParserListener implements ServletContextListener {
 	
 	private class KillActionParser implements ActionParser {
 
-		public static final String PATTERN = "^([\\w/]+\\s[\\w:]+) (\\S+) ([\\w]+) (killed) ([\\w]+) (.+?)";
+		public static final String PATTERN = "^([\\w/]+\\s[\\w:]+) (\\S+) ([\\w]+) (killed) ([\\w]+) (using|by) (.+?)";
 		
 		@Override
 		public boolean parse(String line) throws ParseException {
@@ -96,7 +96,11 @@ public class LogParserListener implements ServletContextListener {
 		    date.setTime(new SimpleDateFormat("dd/MM/yyy hh:mm:ss").parse(matcher.group(1)));
 		    String sourcePlayer = matcher.group(3);
 		    String targetPlayer = matcher.group(5);
-		    service.addKillHistory(currentGameId, sourcePlayer, targetPlayer, date);
+		    if (matcher.group(6).equals("using")) {
+		    	service.addWeaponKillHistory(currentGameId, sourcePlayer, targetPlayer, date, matcher.group(7));
+		    } else {
+		    	service.addKillHistory(currentGameId, sourcePlayer, targetPlayer, date);
+		    }
 		    return true;
 		}
 	}

@@ -55,4 +55,49 @@ public class PlayerHistory {
 		}
 		return 0;
 	}
+
+	public List<?> getHistoryEntries(Class<? extends HistoryEntry> historyEntryType) {
+		List<HistoryEntry> list = new ArrayList<HistoryEntry>();
+		if (historyEntries != null) {
+			for (HistoryEntry entry : historyEntries) {
+				if (entry.getClass().equals(historyEntryType)) {
+					list.add(entry);
+				}
+			}
+		}
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	private Map<String, Integer> getWeaponMapReduce() {
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		List<MurderHistoryEntry> murderHistoryEntries = (List<MurderHistoryEntry>) getHistoryEntries(MurderHistoryEntry.class);
+		if (murderHistoryEntries != null) {
+			for (MurderHistoryEntry entry : murderHistoryEntries) {
+				Integer current = map.get(entry.getWeapon());
+				current = (current == null) ? 0 : current;
+				map.put(entry.getWeapon(), ++current);
+			}
+		}
+		
+		return map;
+	}
+	
+	public String getFavoriteWeapon() {
+		String favoriteWeapon = null;
+		Map<String, Integer> weaponCounter = getWeaponMapReduce();
+		if (weaponCounter != null && weaponCounter.size() > 0) {
+			Map.Entry<String, Integer> maxEntry = null;
+
+			for (Map.Entry<String, Integer> entry : weaponCounter.entrySet())
+			{
+			    if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0)
+			    {
+			        maxEntry = entry;
+			    }
+			}
+			favoriteWeapon = maxEntry.getKey();
+		}
+		return favoriteWeapon;
+	}
 }

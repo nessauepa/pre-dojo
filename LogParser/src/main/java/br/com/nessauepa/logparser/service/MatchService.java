@@ -17,29 +17,36 @@ public class MatchService {
 	private MatchRepository repository;
 	
 	public void addKillHistory(Long matchId, String sourcePlayerName, String targetPlayerName, Calendar date) {
+		addWeaponKillHistory(matchId, sourcePlayerName, targetPlayerName, date, null);
+	}
+
+	public void addWeaponKillHistory(Long matchId, String sourcePlayerName,
+			String targetPlayerName, Calendar date, String weapon) {
 		// Obtem partida.
 		Match match = repository.findOrCreate(matchId);
 		
 		// Cria historico de assassinato.
-		match.addPlayerHistoryEntry(sourcePlayerName, createMurderHistory(targetPlayerName, date));
+		match.addPlayerHistoryEntry(sourcePlayerName, createMurderHistory(targetPlayerName, date, weapon));
 		
 		// Cria historico de morte. 
-		match.addPlayerHistoryEntry(targetPlayerName, createDeathHistory(sourcePlayerName, date));
+		match.addPlayerHistoryEntry(targetPlayerName, createDeathHistory(sourcePlayerName, date, weapon));
 		
-		repository.save(match);
+		repository.save(match);	
 	}
 
-	private MurderHistoryEntry createMurderHistory(String targetPlayerName, Calendar date) {
-		MurderHistoryEntry murderEntry = new MurderHistoryEntry();
-		murderEntry.setDate(date);
-		murderEntry.setTargetPlayerName(targetPlayerName);
-		return murderEntry;
+	private MurderHistoryEntry createMurderHistory(String targetPlayerName, Calendar date, String weapon) {
+		MurderHistoryEntry entry = new MurderHistoryEntry();
+		entry.setDate(date);
+		entry.setTargetPlayerName(targetPlayerName);
+		entry.setWeapon(weapon);
+		return entry;
 	}
 
-	private DeathHistoryEntry createDeathHistory(String sourcePlayerName, Calendar date) {
-		DeathHistoryEntry deathEntry = new DeathHistoryEntry();
-		deathEntry.setDate(date);
-		deathEntry.setSourcePlayerName(sourcePlayerName);
-		return deathEntry;
+	private DeathHistoryEntry createDeathHistory(String sourcePlayerName, Calendar date, String weapon) {
+		DeathHistoryEntry entry = new DeathHistoryEntry();
+		entry.setDate(date);
+		entry.setSourcePlayerName(sourcePlayerName);
+		entry.setWeapon(weapon);
+		return entry;
 	}
 }
