@@ -9,7 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import br.com.nessauepa.logparser.entity.RankingEntry;
+import br.com.nessauepa.logparser.entity.MatchRanking;
 import br.com.nessauepa.logparser.service.RankingService;
 
 @Named
@@ -22,7 +22,7 @@ public class RankingController {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/")
-	public List<RankingEntry> list() {
+	public List<MatchRanking> all() {
 		return service.rankAll();
 	}
 }

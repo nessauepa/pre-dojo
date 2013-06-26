@@ -37,9 +37,12 @@ public class LogParserListener implements ServletContextListener {
 			throw new RuntimeException("Failed parsing text log.", e);
 		}
 	}
+	
+	@Override
+	public void contextDestroyed(ServletContextEvent sce) {
+	}
 
 	private void parseLog(ServletContext ctx) throws FileNotFoundException, ParseException {
-		// TODO: definir log
 		System.out.println("Initializing log parser...");
 		File file = new File(ctx.getRealPath("/WEB-INF/classes/logs/game.log"));
 
@@ -76,24 +79,39 @@ public class LogParserListener implements ServletContextListener {
 	    parseAction(cal, action);
 	}
 
-	private void parseAction(Calendar current, String action) {
+	private void parseAction(Calendar date, String action) {
 		System.out.println(" > Parsing action: " + action);
 
-		String logEntryPattern = "^([\\w]+) (killed) ([\\w]+) (.+?)";
-		Pattern p = Pattern.compile(logEntryPattern);
-	    Matcher matcher = p.matcher(action);
-	    if (!matcher.matches()) {
-	    	System.out.println("Skiping: is not a kill action.");
-	    	return;
-	    }
-
-	    String sourcePlayer = matcher.group(1);
-	    String targetPlayer = matcher.group(3);
-	    service.saveKillAction(sourcePlayer, targetPlayer, current);
+		ActionLogParser[] actionParsers = {new KillActionLogParser()};
+		
+		int parser = 0;
+		while (parser < actionParsers.length && !actionParsers[parser].parse(date, action)) {
+			parser++;
+		}
 	}
 
-	@Override
-	public void contextDestroyed(ServletContextEvent sce) {
+	private interface ActionLogParser{
+		boolean parse(Calendar date, String logEntry);
+		
 	}
+	
+	private class KillActionLogParser implements ActionLogParser {
 
+		String pattern = "^([\\w]+) (killed) ([\\w]+) (.+?)";
+		
+		@Override
+		public boolean parse(Calendar date, String logEntry) {
+			Pattern p = Pattern.compile(pattern);
+		    Matcher matcher = p.matcher(logEntry);
+		    if (!matcher.matches()) {
+		    	System.out.println("Skiping: is not a kill action.");
+		    	return false;
+		    }
+
+		    String sourcePlayer = matcher.group(1);
+		    String targetPlayer = matcher.group(3);
+		    service.saveKillAction(sourcePlayer, targetPlayer, date);
+		    return true;
+		}
+	}
 }
