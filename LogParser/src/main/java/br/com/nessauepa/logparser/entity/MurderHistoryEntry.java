@@ -2,13 +2,13 @@ package br.com.nessauepa.logparser.entity;
 
 public class MurderHistoryEntry extends HistoryEntry {
 
-	private Player target;
+	private String targetPlayerName;
 
-	public Player getTarget() {
-		return target;
+	public String getTargetPlayerName() {
+		return targetPlayerName;
 	}
 
-	public void setTarget(Player target) {
-		this.target = target;
+	public void setTargetPlayerName(String targetPlayerName) {
+		this.targetPlayerName = targetPlayerName;
 	}
 }

@@ -1,49 +1,60 @@
 package br.com.nessauepa.logparser.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.com.nessauepa.logparser.entity.DeathHistoryEntry;
-import br.com.nessauepa.logparser.entity.HistoryEntry;
+import br.com.nessauepa.logparser.entity.Match;
 import br.com.nessauepa.logparser.entity.MurderHistoryEntry;
-import br.com.nessauepa.logparser.entity.Player;
-import br.com.nessauepa.logparser.entity.MatchRanking;
+import br.com.nessauepa.logparser.entity.PlayerHistory;
+import br.com.nessauepa.logparser.entity.Ranking;
 import br.com.nessauepa.logparser.entity.RankingEntry;
-import br.com.nessauepa.logparser.repository.PlayerRepository;
+import br.com.nessauepa.logparser.repository.MatchRepository;
 
 @Named
 public class RankingService {
 
 	@Inject
-	private PlayerRepository playerRepository;
+	private MatchRepository repository;
 	
-	public List<MatchRanking> rankAll() {
+	/**
+	 * @return Lista de rankings por partida.
+	 */
+	public List<Ranking> rankAll() {
+		
+		List<Ranking> list = new ArrayList<Ranking>();
+		
+		for (Match match : repository.listAll()) {
+			Ranking ranking = new Ranking();
+			ranking.setMatchId(match.getId());
+			ranking.setRankingEntries(rank(match));
+			list.add(ranking);
+		}
+		
+		return list;
+	}
+	
+	/**
+	 * @param match
+	 * @return Ranking da partida informada.
+	 */
+	public List<RankingEntry> rank(Match match) {
 		List<RankingEntry> list = new ArrayList<RankingEntry>();
 	
-		// TODO: obter historico por game
-		for (Player player : playerRepository.listAll()) {
+		for (PlayerHistory playerHistory : match.getPlayersHistory()) {
 			RankingEntry entry = new RankingEntry();
-			entry.setPlayer(player);
-			Map<Class<? extends HistoryEntry>, Integer> historyCounter = player.getHistoryCounter();
-			if (historyCounter != null) {
-				Integer deathCount = historyCounter.get(DeathHistoryEntry.class);
-				Integer murderCount = historyCounter.get(MurderHistoryEntry.class);
-				entry.setDeathCount((deathCount == null) ? 0 : deathCount);
-				entry.setMurderCount((murderCount == null) ? 0 : murderCount);
-			}
+			entry.setName(playerHistory.getName());
+			entry.setDeathCount(playerHistory.countHistoryEntries(DeathHistoryEntry.class));
+			entry.setMurderCount(playerHistory.countHistoryEntries(MurderHistoryEntry.class));
 			list.add(entry);
 		}
 		
-		Collections.sort(list, new RankingEntry.RankByMurderNumber());
+		Collections.sort(list, new RankingEntry.OrderByMurderDesc());
 		
-		MatchRanking matchRanking = new MatchRanking();
-		matchRanking.setEntries(list);
-		return Arrays.asList(matchRanking);
+		return list;
 	}
 }

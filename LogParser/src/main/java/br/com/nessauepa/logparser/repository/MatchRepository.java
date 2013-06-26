@@ -5,10 +5,10 @@ import javax.inject.Named;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-import br.com.nessauepa.logparser.entity.Player;
+import br.com.nessauepa.logparser.entity.Match;
 
 @Named
-public class PlayerRepository extends MongoBaseRepository<Player> {
+public class MatchRepository extends MongoBaseRepository<Match> {
 
 	@Inject
 	private MongoTemplate mongoTemplate;
@@ -18,10 +18,15 @@ public class PlayerRepository extends MongoBaseRepository<Player> {
 		return mongoTemplate;
 	}
 
-	public Player findOrCreate(Player player) {
-		Player attached = findById(player.getName());
-		if (attached != null) return attached;
-		save(player);
-		return player;
+	public Match findOrCreate(Long id) {
+		Match match = findById(id);
+
+		if (match == null) {
+			match = new Match();
+			match.setId(id);
+			save(match);
+		}
+		
+		return match;
 	}
 }

@@ -7,41 +7,44 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class RankingEntry {
 
-	private Player player;
-	private int murderNumber;
-	private int deathNumber;
+	private String name;
+	private int murderCount;
+	private int deathCount;
 
 	// TODO: adicionar no xml de retorno
 	public Boolean notDiedAward() {
-		return deathNumber == 0;
+		return deathCount == 0;
 	}
 	
-	public Player getPlayer() {
-		return player;
+	public String getName() {
+		return name;
 	}
-	public void setPlayer(Player player) {
-		this.player = player;
+
+	public void setName(String name) {
+		this.name = name;
 	}
+
 	public int getMurderCount() {
-		return murderNumber;
+		return murderCount;
 	}
-	public void setMurderCount(int murderNumber) {
-		this.murderNumber = murderNumber;
+
+	public void setMurderCount(int murderCount) {
+		this.murderCount = murderCount;
 	}
+
 	public int getDeathCount() {
-		return deathNumber;
+		return deathCount;
 	}
-	public void setDeathCount(int deathNumber) {
-		this.deathNumber = deathNumber;
+
+	public void setDeathCount(int deathCount) {
+		this.deathCount = deathCount;
 	}
-	
-	public static class RankByMurderNumber implements Comparator<RankingEntry> {
+
+	public static class OrderByMurderDesc implements Comparator<RankingEntry> {
 
 		@Override
 		public int compare(RankingEntry o1, RankingEntry o2) {
 			return o2.getMurderCount() - o1.getMurderCount();
 		}
-
-		
 	}
 }

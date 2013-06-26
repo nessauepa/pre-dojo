@@ -2,13 +2,13 @@ package br.com.nessauepa.logparser.entity;
 
 public class DeathHistoryEntry extends HistoryEntry {
 
-	private Player source;
+	private String sourcePlayerName;
 
-	public Player getSource() {
-		return source;
+	public String getSourcePlayerName() {
+		return sourcePlayerName;
 	}
 
-	public void setSource(Player source) {
-		this.source = source;
+	public void setSourcePlayerName(String sourcePlayerName) {
+		this.sourcePlayerName = sourcePlayerName;
 	}
 }
