@@ -2,20 +2,24 @@ package br.com.nessauepa.logparser.entity;
 
 import java.util.Comparator;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class RankingEntry {
 
 	private String name;
 	private int murderCount;
 	private int deathCount;
-
-	// TODO: adicionar no xml de retorno
-	public Boolean notDiedAward() {
+	
+	@XmlAttribute
+	public boolean isNotDiedAward() {
 		return deathCount == 0;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -44,6 +48,10 @@ public class RankingEntry {
 
 		@Override
 		public int compare(RankingEntry o1, RankingEntry o2) {
+			// Se numero de assassinatos empatado, prioriza quem morreu menos.
+			if (o2.getMurderCount() == o1.getMurderCount()) {
+				return o1.getDeathCount() - o2.getDeathCount();
+			}
 			return o2.getMurderCount() - o1.getMurderCount();
 		}
 	}
