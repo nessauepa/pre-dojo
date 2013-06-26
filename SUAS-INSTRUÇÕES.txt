@@ -35,7 +35,11 @@ Para a operação de parser foram utilizadas as classes Scanner e Expressões Regul
 **Padronização**
 
 Neste projeto, optou-se por utilizar sempre que possível as especificações Java.<br />
-Por isso, foram utilizadas as especificações JAX-RS (implementação RestEasy), Injeção de Dependência (implementação Spring), como pode ser notado pelo uso das anotações @Named e @Inject ao invés das anotações proprietárias do Spring.<br />
+Por isso, foram utilizadas as especificações JAX-RS (implementação RestEasy), Injeção de Dependência (implementação Spring), como pode ser notado pelo uso das anotações @Named e @Inject ao invés das anotações proprietárias do Spring @Controller, @Service, @Repository, @Autowired, etc.<br />
+
+**Modularização e generalização**
+A fim de aumentar a organização do código e melhorar a qualidade do mesmo, procurou-se seguir alguns preceitos chave da orientação a objeto, como Encapsulamento, Coesão, Polimorfismo, Injeção de dependência, Inversão de Controle, entre outros.<br />
+Com este mesmo fim, também foram utilizados diversos design patterns na estruturação do código, como: MVC (Spring MVC e RestEasy), Template (para que as classes repositories concretas disponibilizem o MongoTemplate para a classe genérica), Repository (Spring), Command (Parsers para cada tipo de linha de log).
 
 **Estrutura Projeto Java**
 
