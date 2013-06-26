@@ -24,6 +24,13 @@ public class LogParserListener implements ServletContextListener {
 
 	private PlayerService service;
 	
+	private ActionLogParser[] actionParsers = {
+			new EnterActionLogParser(), 
+			new KillActionLogParser(), 
+			new EndActionLogParser()};
+	
+	private Long currentGameId;
+	
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
 		// Injeta repository no contexto do spring
@@ -73,16 +80,14 @@ public class LogParserListener implements ServletContextListener {
 	    Date date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").parse(matcher.group(1));
 	    Calendar cal = Calendar.getInstance();
 	    cal.setTime(date);
-	    
+	
 	    String action = matcher.group(3);
 	    
-	    parseAction(cal, action);
+	    parseContent(cal, action);
 	}
 
-	private void parseAction(Calendar date, String action) {
+	private void parseContent(Calendar date, String action) {
 		System.out.println(" > Parsing action: " + action);
-
-		ActionLogParser[] actionParsers = {new KillActionLogParser()};
 		
 		int parser = 0;
 		while (parser < actionParsers.length && !actionParsers[parser].parse(date, action)) {
@@ -97,7 +102,7 @@ public class LogParserListener implements ServletContextListener {
 	
 	private class KillActionLogParser implements ActionLogParser {
 
-		String pattern = "^([\\w]+) (killed) ([\\w]+) (.+?)";
+		private String pattern = "^([\\w]+) (killed) ([\\w]+) (.+?)";
 		
 		@Override
 		public boolean parse(Calendar date, String logEntry) {
@@ -111,6 +116,42 @@ public class LogParserListener implements ServletContextListener {
 		    String sourcePlayer = matcher.group(1);
 		    String targetPlayer = matcher.group(3);
 		    service.saveKillAction(sourcePlayer, targetPlayer, date);
+		    return true;
+		}
+	}
+
+	private class EnterActionLogParser implements ActionLogParser {
+
+		private String pattern = "^(New match) ([\\w]+) (has started)";
+		
+		@Override
+		public boolean parse(Calendar date, String logEntry) {
+			Pattern p = Pattern.compile(pattern);
+		    Matcher matcher = p.matcher(logEntry);
+		    if (!matcher.matches()) {
+		    	System.out.println("Skiping: is not a enter action.");
+		    	return false;
+		    }
+
+		    currentGameId = Long.parseLong(matcher.group(2));
+		    return true;
+		}
+	}
+	
+	private class EndActionLogParser implements ActionLogParser {
+
+		private String pattern = "^(Match) ([\\w]+) (has ended)";
+		
+		@Override
+		public boolean parse(Calendar date, String logEntry) {
+			Pattern p = Pattern.compile(pattern);
+		    Matcher matcher = p.matcher(logEntry);
+		    if (!matcher.matches()) {
+		    	System.out.println("Skiping: is not a end action.");
+		    	return false;
+		    }
+
+		    currentGameId = null;
 		    return true;
 		}
 	}
