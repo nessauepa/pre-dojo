@@ -2,7 +2,7 @@
 
 - Certificar-se que o Maven está instalado
 - Certificar-se que o Maven está utilizando o Java 7 com 'mvn -version'
-- Certificar-se que as portas 8080 (Jetty) e e 27017 (MongoDB) estão livres
+- Certificar-se que as portas 8080 (Jetty) e 27017 (MongoDB) estão livres
 - Baixar o projeto do repositório GIT: https://github.com/nessauepa/pre-dojo.git
 - Compilar e executar o projeto com ‘mvn clean install jetty:run’
 - Abrir o projeto em <a href="http://localhost:8081">http://localhost:8080</a>
@@ -42,7 +42,3 @@ Por isso, foram utilizadas as especificações JAX-RS (implementação RestEasy), In
 O projeto segue o Design Pattern MVC e é dividido nos pacotes ’controller’ (Controller), ‘entity’ e ‘repository’ (Model).<br />
 A camada de controller é implementada com Spring MVC e expõe seus serviços através de uma API RESTful implementada com o RestEasy e usando o formato JSON para facilitar o parser das informações e montagem da tela.<br />
 A camada de model contém as entidades e os repositórios.<br />
-
-**Interface**
-
-// TODO
