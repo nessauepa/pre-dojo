@@ -116,4 +116,35 @@ public class PlayerHistory {
 		}
 		return maxStreak;
 	}
+
+	@SuppressWarnings("unchecked")
+	public boolean hasMurdersNumberInPeriod(int murdersNumberGoal, int periodLimit) {
+		List<MurderHistoryEntry> murderHistoryEntries = (List<MurderHistoryEntry>) getHistoryEntries(MurderHistoryEntry.class);
+		if (murderHistoryEntries != null) {
+			
+			// TODO: Complexidade O(n^2), transformar em O(n)
+			for (int i = 0; i < murderHistoryEntries.size(); i++) {
+				long startTime = murderHistoryEntries.get(i).getTimeImMillis();
+				int murdersCount = 1;
+				
+				for (int j = ++i; j < murderHistoryEntries.size(); j++) {
+					long currentTime = murderHistoryEntries.get(j).getTimeImMillis();
+					
+					murdersCount++;
+					
+					// Atingiu o numero de mortes dentro do periodo.
+					if (murdersCount >= murdersNumberGoal) return true;
+					
+					if ((currentTime - startTime) > periodLimit) {
+						// Ultrapassou o periodo especificado.
+						break;
+					}
+				}
+			}
+			
+			return false;
+		}
+		
+		return false;
+	}
 }

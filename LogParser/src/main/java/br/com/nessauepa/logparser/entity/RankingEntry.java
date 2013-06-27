@@ -16,6 +16,7 @@ public class RankingEntry {
 	private int deathCount;
 	private String favoriteWeapon;
 	private int maxStreak;
+	private boolean murdersInPeriodAward;
 	
 	@XmlAttribute
 	public boolean isNotDiedAward() {
@@ -61,6 +62,16 @@ public class RankingEntry {
 	public void setMaxStreak(int maxStreak) {
 		this.maxStreak = maxStreak;
 	}
+
+	public boolean isMurdersInPeriodAward() {
+		return murdersInPeriodAward;
+	}
+
+	public void setMurdersInPeriodAward(boolean murdersInPeriodAward) {
+		this.murdersInPeriodAward = murdersInPeriodAward;
+	}
+
+
 
 	public static class OrderByMurderDesc implements Comparator<RankingEntry> {
 

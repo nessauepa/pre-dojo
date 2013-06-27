@@ -52,6 +52,7 @@ public class RankingService {
 			entry.setMurderCount(playerHistory.countHistoryEntries(MurderHistoryEntry.class));
 			entry.setFavoriteWeapon(playerHistory.getFavoriteWeapon());
 			entry.setMaxStreak(playerHistory.getMaxStreak());
+			entry.setMurdersInPeriodAward(playerHistory.hasMurdersNumberInPeriod(5, 1 * 60 * 60));
 			list.add(entry);
 		}
 		

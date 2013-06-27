@@ -15,4 +15,8 @@ public abstract class HistoryEntry {
 	public void setDate(Calendar date) {
 		this.date = date;
 	}
+
+	public Long getTimeImMillis() {
+		return date.getTimeInMillis();
+	}
 }
